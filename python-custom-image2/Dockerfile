@@ -1,0 +1,26 @@
+FROM python:latest
+
+ARG APP=hello.py
+
+# executed during build in a temporary container
+RUN echo "start building new image"
+
+WORKDIR /usr/src
+
+COPY src/requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY src .
+
+RUN pwd
+RUN ls -l
+
+RUN echo $APP
+
+ENV MAIN=${APP}
+
+# executed when running the container
+# Do not use env var in CMD => use it in a script
+ENTRYPOINT ["./docker-entrypoint.sh"]
+#CMD [ "$MAIN" ]
+#CMD [ "main.py" ]
