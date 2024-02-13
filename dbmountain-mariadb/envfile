@@ -1,0 +1,4 @@
+MARIADB_DATABASE=dbmountain_test
+MARIADB_ROOT_PASSWORD=my-secret-pw
+MARIADB_USER=mountain
+MARIADB_PASSWORD=secret-mountain
