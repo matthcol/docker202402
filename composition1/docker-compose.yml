@@ -1,0 +1,36 @@
+services:
+  db:
+    image: mariadb:11.2
+    container_name: dbmountain
+    hostname: dbmountain.localdomain
+    networks: 
+      - reseau
+    environment:
+      - MARIADB_ROOT_PASSWORD=my_secret_pw
+      - MARIADB_DATABASE=dbmountain
+      - MARIADB_USER=mountain
+      - MARIADB_PASSWORD=secret-mountain
+    ports:
+      - 3306:3306
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d
+      - datamountain:/var/lib/mysql
+
+  web:
+    build: webserver
+    container_name: papache
+    hostname: papache.localdomain
+    networks: 
+      - reseau
+    ports: 
+      - 80:80
+
+volumes:
+  datamountain:
+#    name: datamountain
+#    external: true
+
+networks:
+  reseau:
+    name: reseau
+  

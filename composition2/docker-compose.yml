@@ -1,0 +1,31 @@
+services:
+  db:
+    image: mariadb:${DB_TAG}
+    hostname: dbmountain.localdomain
+    environment:
+      - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MARIADB_DATABASE=${DB_NAME}
+      - MARIADB_USER=${DB_USER}
+      - MARIADB_PASSWORD=${DB_PASSWORD}
+    ports:
+      - ${DB_PORT}:3306
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d
+      - datamountain:/var/lib/mysql
+
+  web:
+    build: 
+      context: webserver
+      args:
+        - HTTP_PORT=${WEB_PORT_INTERNAL}
+    hostname: papache.localdomain
+    ports: 
+      - ${WEB_PORT_EXTERNAL}:${WEB_PORT_INTERNAL}
+
+volumes:
+  datamountain:
+#    name: datamountain
+#    external: true
+
+
+  
