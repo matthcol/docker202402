@@ -1,0 +1,48 @@
+services:
+  db:
+    image: mariadb:${DB_TAG:-latest}
+    restart: always
+    hostname: dbmountain.localdomain
+    environment:
+      - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MARIADB_DATABASE=${DB_NAME}
+      - MARIADB_USER=${DB_USER}
+      - MARIADB_PASSWORD=${DB_PASSWORD}
+    ports:
+      - ${DB_PORT:-3306}:3306
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d
+      - datamountain:/var/lib/mysql
+
+  phpfpm:
+    image: 'bitnami/php-fpm:latest'
+    volumes:
+      - ./php:/app
+
+  nginx:
+    image: 'bitnami/nginx:latest'
+    depends_on:
+      - phpfpm
+    ports:
+      - ${WEB_PORT_HTTP:-80}:80
+      - ${WEB_PORT_HTTPS:-443}:443
+    volumes:
+      - ./nginx/server.conf:/opt/bitnami/nginx/conf/server_blocks/mountain.conf
+  
+  dbgui:
+    image: phpmyadmin:${DBGUI_TAG:-latest}
+    restart: always
+    ports:
+      - ${DBGUI_PORT:-81}:80
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=db
+      - PMA_PORT=3306
+
+volumes:
+  datamountain:
+#    name: datamountain
+#    external: true
+
+
+  
