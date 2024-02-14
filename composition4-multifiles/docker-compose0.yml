@@ -1,0 +1,59 @@
+services:
+  db1:
+    image: mariadb:${DB_TAG:-latest}
+    restart: always
+    hostname: dbmountain.localdomain
+    environment: &env
+      - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MARIADB_DATABASE=${DB_NAME}
+      - MARIADB_USER=${DB_USER}
+      - MARIADB_PASSWORD=${DB_PASSWORD}
+    ports:
+      - ${DB_PORT1:-3306}:3306
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d
+      - datamountain1:/var/lib/mysql
+    healthcheck: &health
+      interval: 30s
+      retries: 3
+      test:
+        [
+          "CMD",
+          "healthcheck.sh",
+          "--su-mysql",
+          "--connect",
+          "--innodb_initialized"
+        ]
+      timeout: 30s
+
+  db2:
+    image: mariadb:${DB_TAG:-latest}
+    restart: always
+    hostname: dbmountain.localdomain
+    environment: *env
+    ports:
+      - ${DB_PORT2:-3307}:3306
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d
+      - datamountain2:/var/lib/mysql
+    healthcheck: *health
+
+  db3:
+    image: mariadb:${DB_TAG:-latest}
+    restart: always
+    hostname: dbmountain.localdomain
+    environment: *env
+    ports:
+      - ${DB_PORT3:-3308}:3306
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d
+      - datamountain3:/var/lib/mysql
+    healthcheck: 
+      <<: *health
+      start_period: 20s
+      retries: 5
+      
+volumes:
+  datamountain1:
+  datamountain2:
+  datamountain3:

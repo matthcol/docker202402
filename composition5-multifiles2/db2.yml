@@ -1,0 +1,12 @@
+services:
+  db2:
+    extends:
+      file: db.yml
+      service: db
+    volumes:
+      - datamountain2:/var/lib/mysql
+    ports:
+      - ${DB_PORT2:-3307}:3306
+      
+volumes:
+  datamountain2:

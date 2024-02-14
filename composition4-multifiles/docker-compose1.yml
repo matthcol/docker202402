@@ -3,6 +3,8 @@ services:
     extends:
       file: db.yml
       service: db
+    ports:
+      - ${DB_PORT1:-3306}:3306
     volumes:
       - datamountain1:/var/lib/mysql
 
@@ -10,6 +12,8 @@ services:
     extends:
       file: db.yml
       service: db
+    ports:
+      - ${DB_PORT2:-3307}:3306
     volumes:
       - datamountain2:/var/lib/mysql
     environment:
@@ -19,6 +23,8 @@ services:
     extends:
       file: db.yml
       service: db
+    ports:
+      - ${DB_PORT3:-3308}:3306
     volumes:
       - datamountain3:/var/lib/mysql
     environment:

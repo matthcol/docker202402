@@ -1,0 +1,12 @@
+services:
+  db3:
+    extends:
+      file: db.yml
+      service: db
+    volumes:
+      - datamountain3:/var/lib/mysql
+    ports:
+      - ${DB_PORT3:-3308}:3306
+      
+volumes:
+  datamountain3:

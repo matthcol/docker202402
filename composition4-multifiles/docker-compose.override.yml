@@ -1,0 +1,12 @@
+services:
+  db3:
+    environment:
+      MARIADB_USER: mountain3
+      
+  dbgui:
+    image: phpmyadmin:${DBGUI_TAG:-latest}
+    restart: always
+    ports:
+      - ${DBGUI_PORT:-81}:80
+    environment:
+      - PMA_ARBITRARY=1
