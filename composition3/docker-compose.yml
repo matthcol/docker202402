@@ -13,9 +13,25 @@ services:
     volumes:
       - ./sql:/docker-entrypoint-initdb.d
       - datamountain:/var/lib/mysql
+    healthcheck:
+      interval: 30s
+      retries: 3
+      test:
+        [
+          "CMD",
+          "healthcheck.sh",
+          "--su-mysql",
+          "--connect",
+          "--innodb_initialized"
+        ]
+      timeout: 30s
 
   phpfpm:
     image: 'bitnami/php-fpm:latest'
+    depends_on:
+      db:
+        condition: service_healthy
+        # restart: true
     volumes:
       - ./php:/app
 
@@ -31,6 +47,10 @@ services:
   
   dbgui:
     image: phpmyadmin:${DBGUI_TAG:-latest}
+    depends_on:
+      db:
+        condition: service_healthy
+        # restart: true
     restart: always
     ports:
       - ${DBGUI_PORT:-81}:80
@@ -38,6 +58,8 @@ services:
       - PMA_ARBITRARY=1
       - PMA_HOST=db
       - PMA_PORT=3306
+      - PMA_USER=${DB_USER}
+      - PMA_PASSWORD=${DB_PASSWORD}
 
 volumes:
   datamountain:

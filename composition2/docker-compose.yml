@@ -1,6 +1,7 @@
 services:
   db:
-    image: mariadb:${DB_TAG}
+    image: mariadb:${DB_TAG:-latest}
+    restart: always
     hostname: dbmountain.localdomain
     environment:
       - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
@@ -8,7 +9,7 @@ services:
       - MARIADB_USER=${DB_USER}
       - MARIADB_PASSWORD=${DB_PASSWORD}
     ports:
-      - ${DB_PORT}:3306
+      - ${DB_PORT:-3306}:3306
     volumes:
       - ./sql:/docker-entrypoint-initdb.d
       - datamountain:/var/lib/mysql
@@ -17,10 +18,23 @@ services:
     build: 
       context: webserver
       args:
-        - HTTP_PORT=${WEB_PORT_INTERNAL}
+        - HTTP_PORT=${WEB_PORT_INTERNAL:-80}
     hostname: papache.localdomain
+    restart: on-failure:3
     ports: 
-      - ${WEB_PORT_EXTERNAL}:${WEB_PORT_INTERNAL}
+      - ${WEB_PORT_EXTERNAL:-80}:${WEB_PORT_INTERNAL:-80}
+    environment:
+      - FAIL=${WEB_FAIL:-0}
+
+  dbgui:
+    image: phpmyadmin:${DBGUI_TAG:-latest}
+    restart: always
+    ports:
+      - ${DBGUI_PORT:-81}:80
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=db
+      - PMA_PORT=3306
 
 volumes:
   datamountain:

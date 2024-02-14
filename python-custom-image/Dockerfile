@@ -18,9 +18,10 @@ RUN ls -l
 RUN echo $APP
 RUN ln -s "${APP}" main.py
 
-ENV MAIN=${APP}
+#ENV MAIN=${APP}
 
 # executed when running the container
+# Do not use env var in CMD => use it in a script
 ENTRYPOINT ["python"]
 #CMD [ "$MAIN" ]
 CMD [ "main.py" ]

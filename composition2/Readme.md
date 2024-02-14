@@ -1,6 +1,9 @@
 # Composition
 https://docs.docker.com/compose/
 
+YAML reference:
+https://docs.docker.com/compose/compose-file/
+
 # Run composition
 docker compose up -d
 docker compose down
@@ -36,3 +39,15 @@ docker compose up -d web
 docker run -it --rm --network=reseau rockylinux:9.3
 
 grep "^Listen" /etc/httpd/conf/httpd.conf 
+
+
+docker compose -p composition3 up -d
+docker compose -p composition3 exec -it web bash
+docker exec -it composition3-web-1 bash
+
+docker compose -p composition4 --env-file .env4 up -d
+
+docker compose cp .\config.php web:/var/www/html/
+dnf module enable php
+dnf module install php/common
+dnf install php-mysqlnd

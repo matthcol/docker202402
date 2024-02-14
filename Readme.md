@@ -66,3 +66,10 @@ docker run -it --rm -v "%cd%":/usr/src/myapp -w /usr/src/myapp python:latest pyt
 # volume
 docker volume create|inspect|ls|rm|prune
 
+# Dockerfile
+Lexique: https://docs.docker.com/engine/reference/builder/
+
+# Networks
+https://docs.docker.com/engine/reference/builder/
+
+
